@@ -1,0 +1,21 @@
+version: '3'
+services:
+  vscode:
+    container_name: vscode
+    image: codercom/code-server:latest
+    command: code-server --auth none --disable-telemetry /home/coder/project
+    volumes:
+      - ./config:/home/coder/.config/code-server
+      - ./local-share:/home/coder/.local/share/code-server
+      - ./project:/home/coder/project
+    user: "${UID}:${GID}"
+    environment:
+      DOCKER_USER: "${USER}"
+    restart: unless-stopped
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+    name: proxy
