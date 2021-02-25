@@ -1,0 +1,17 @@
+version: '3'
+services:
+  sagemath:
+    container_name: cocalc
+    image: sagemathinc/cocalc:latest
+    volumes:
+      - ./projects:/projects
+      - /etc/timezone:/etc/timezone
+      - /etc/localtime:/etc/localtime
+    restart: unless-stopped
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+    name: proxy
