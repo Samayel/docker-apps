@@ -2,7 +2,8 @@ version: '3'
 services:
   sagemath:
     container_name: sagemath
-    image: sagemath/sagemath:latest
+    #image: sagemath/sagemath:latest
+    image: sagemath/sagemath:develop
     command: sage-jupyter --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.notebook_dir='/home/sage/notebooks'
     volumes:
       - ./notebooks:/home/sage/notebooks

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# docker run -it sagemath/sagemath:latest
+
+COMMAND="$*"
+: ${COMMAND:="sage"}
+
+exec docker exec -it sagemath sage -sh -c ${COMMAND}
