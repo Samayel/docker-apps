@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+docker run -it --rm \
+    -v $PWD/projects:/projects \
+    -v $PWD/.julia:/root/.julia \
+    -w /projects \
+    julia:latest \
+    julia --project=/projects "$@"
