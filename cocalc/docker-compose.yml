@@ -5,8 +5,8 @@ services:
     image: sagemathinc/cocalc:latest
     volumes:
       - ./projects:/projects
-      - /etc/timezone:/etc/timezone
-      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped
     networks:
       - proxy
