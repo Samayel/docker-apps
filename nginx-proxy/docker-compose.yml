@@ -11,14 +11,6 @@ services:
       # Admin Web Port:
       - '81:81'
     environment:
-#     # These are the settings to access your db
-#     DB_MYSQL_HOST: "db"
-#     DB_MYSQL_PORT: 3306
-#     DB_MYSQL_USER: "npm"
-#     DB_MYSQL_PASSWORD: "npm"
-#     DB_MYSQL_NAME: "npm"
-      # If you would rather use Sqlite uncomment this
-      # and remove all DB_MYSQL_* lines above
       DB_SQLITE_FILE: "/data/database.sqlite"
       # Uncomment this if IPv6 is not enabled on your host
       # DISABLE_IPV6: 'true'
@@ -28,28 +20,8 @@ services:
     restart: unless-stopped
     networks:
       - proxy
-#     - internal
-#   depends_on:
-#     - db
-# db:
-#   container_name: nginx-proxy_db
-#   #image: 'jc21/mariadb-aria:latest'
-#   image: 'yobasystems/alpine-mariadb:latest'
-#   environment:
-#     MYSQL_ROOT_PASSWORD: 'npm'
-#     MYSQL_DATABASE: 'npm'
-#     MYSQL_USER: 'npm'
-#     MYSQL_PASSWORD: 'npm'
-#   volumes:
-#     - ./data/mysql:/var/lib/mysql
-#   restart: unless-stopped
-#   networks:
-#     - internal
 
 networks:
   proxy:
     external: true
     name: proxy
-# internal:
-#   internal: true
-#   driver: bridge
