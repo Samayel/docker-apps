@@ -1,0 +1,19 @@
+version: "2.1"
+services:
+  snapdrop:
+    container_name: snapdrop
+    image: ghcr.io/linuxserver/snapdrop
+    volumes:
+      - ./config:/config
+    restart: unless-stopped
+    networks:
+      - proxy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+
+networks:
+  proxy:
+    external: true
+    name: proxy
