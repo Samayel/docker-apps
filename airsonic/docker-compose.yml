@@ -1,0 +1,27 @@
+version: "2.1"
+services:
+  airsonic:
+    container_name: airsonic
+    image: ghcr.io/linuxserver/airsonic
+    volumes:
+      - ./config:/config
+      - ./music:/music
+      - ./playlists:/playlists
+      - ./podcasts:/podcasts
+      - ./media:/media #optional
+#   devices:
+#     - /dev/snd:/dev/snd #optional
+    restart: unless-stopped
+    networks:
+      - proxy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+#     - CONTEXT_PATH=<URL_BASE> #optional
+      - JAVA_OPTS=-Dserver.use-forward-headers=true #optional
+
+networks:
+  proxy:
+    external: true
+    name: proxy
