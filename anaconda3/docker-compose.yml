@@ -1,0 +1,16 @@
+version: '3'
+services:
+  anaconda:
+    container_name: anaconda3
+    image: continuumio/anaconda3
+    command: /opt/conda/bin/jupyter lab --notebook-dir=/opt/notebooks --ip='*' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
+    volumes:
+      - ./notebooks:/opt/notebooks
+    restart: unless-stopped
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+    name: proxy
