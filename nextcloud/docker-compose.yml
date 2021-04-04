@@ -1,0 +1,20 @@
+version: "2.1"
+services:
+  nextcloud:
+    container_name: nextcloud
+    image: ghcr.io/linuxserver/nextcloud
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    volumes:
+      - ./config:/config
+      - ./data:/data
+    restart: unless-stopped
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+    name: proxy
