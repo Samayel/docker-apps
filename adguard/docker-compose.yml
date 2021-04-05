@@ -1,0 +1,30 @@
+version: "3.5"
+services:
+  adguard:
+    container_name: adguard
+    image: adguard/adguardhome
+    volumes:
+      - ./work:/opt/adguardhome/work
+      - ./conf:/opt/adguardhome/conf
+    restart: unless-stopped
+#   network_mode: host
+    networks:
+      - proxy
+#   ports:
+#     - 3000:3000/tcp   # Admin Web (Pre-Setup)
+#     - 80:80/tcp       # Admin Web (Post-Setup)
+#     - 53:53/tcp       # DNS
+#     - 53:53/udp       # DNS
+#     - 67:67/udp       # DHCP
+#     - 68:68/tcp       # DHCP
+#     - 68:68/udp       # DHCP
+#     - 443:443/tcp     # DNS-over-HTTPS
+#     - 853:853/tcp     # DNS-over-TLS
+#     - 784:784/udp     # DNS-over-QUIC
+#     - 5443:5443/tcp   # DNSCrypt
+#     - 5443:5443/udp   # DNSCrypt
+
+networks:
+  proxy:
+    external: true
+    name: proxy
