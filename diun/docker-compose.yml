@@ -25,3 +25,10 @@ services:
       - "DIUN_NOTIF_MAIL_FROM=${DIUN_NOTIF_MAIL_FROM}"
       - "DIUN_NOTIF_MAIL_TO=${DIUN_NOTIF_MAIL_TO}"
     restart: unless-stopped
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+    name: proxy
