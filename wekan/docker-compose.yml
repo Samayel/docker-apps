@@ -1,0 +1,64 @@
+version: '2'
+services:
+
+  wekandb:
+    container_name: wekan_db
+    image: mongo:4.4
+    restart: unless-stopped
+    command: mongod --logpath /dev/null --oplogSize 128 --quiet
+    networks:
+      - internal
+    volumes:
+      - ./db:/data/db
+      - ./dump:/dump
+
+  wekan:
+    container_name: wekan
+    image: quay.io/wekan/wekan
+    restart: unless-stopped
+    networks:
+      - internal
+      - proxy
+    environment:
+      - MONGO_URL=mongodb://wekan_db:27017/wekan
+      - ROOT_URL=https://wekan.localhost
+      #---------------------------------------------------------------
+      # ==== EMAIL SETTINGS ====
+      # Email settings are required in both MAIL_URL and Admin Panel,
+      #   see https://github.com/wekan/wekan/wiki/Troubleshooting-Mail
+      #   For SSL in email, change smtp:// to smtps://
+      # NOTE: Special characters need to be url-encoded in MAIL_URL.
+      #       You can encode those characters for example at: https://www.urlencoder.org
+      #- MAIL_URL=smtp://user:pass@mailserver.example.com:25/
+      - MAIL_FROM=Wekan Notifications <noreply@wekan.localhost>
+      #---------------------------------------------------------------
+      # ==== NUMBER OF SEARCH RESULTS PER PAGE BY DEFAULT ====
+      #- RESULTS_PER_PAGE=20
+      #---------------------------------------------------------------
+      # If you disable Wekan API with false, Export Board does not work.
+      - WITH_API=true
+      #---------------------------------------------------------------
+      # ==== RICH TEXT EDITOR IN CARD COMMENTS ====
+      # https://github.com/wekan/wekan/pull/2560
+      - RICHER_CARD_COMMENT_EDITOR=false
+      #---------------------------------------------------------------
+      # ==== CARD OPENED, SEND WEBHOOK MESSAGE ====
+      # https://github.com/wekan/wekan/issues/2518
+      - CARD_OPENED_WEBHOOK_ENABLED=false
+      #---------------------------------------------------------------
+      # ==== Allow to shrink attached/pasted image ====
+      #-MAX_IMAGE_PIXEL=1024
+      #-IMAGE_COMPRESS_RATIO=80
+      #---------------------------------------------------------------
+      - BIGEVENTS_PATTERN=NONE
+      - BROWSER_POLICY_ENABLED=true
+    depends_on:
+      - wekandb
+
+networks:
+  internal:
+    internal: true
+    driver: bridge
+  proxy:
+    external: true
+    name: proxy
