@@ -1,0 +1,13 @@
+version: '3'
+services:
+  url2pdf:
+    container_name: url2pdf
+    image: restorecommerce/pdf-rendering-srv
+    restart: unless-stopped
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+    name: proxy
