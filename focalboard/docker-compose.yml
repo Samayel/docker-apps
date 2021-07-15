@@ -1,0 +1,15 @@
+version: "2.1"
+services:
+  focalboard:
+    container_name: focalboard
+    image: mattermost/focalboard
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+    name: proxy
