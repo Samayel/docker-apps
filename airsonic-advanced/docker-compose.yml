@@ -1,0 +1,22 @@
+version: "2.1"
+services:
+  airsonic-advanced:
+    container_name: airsonic-advanced
+    image: airsonicadvanced/airsonic-advanced:latest
+    volumes:
+      - ./data:/var/airsonic
+      - ../airsonic/music:/music
+      - ../airsonic/playlists:/playlists
+      - ../airsonic/podcasts:/podcasts
+    restart: unless-stopped
+    networks:
+      - proxy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - JAVA_OPTS=-Xmx512m -Dserver.forward-headers-strategy=native
+
+networks:
+  proxy:
+    external: true
+    name: proxy
