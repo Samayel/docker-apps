@@ -1,0 +1,20 @@
+version: "2.1"
+services:
+  mssql-server:
+    container_name: mssql-server
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: unless-stopped
+    volumes:
+      - ./data:/var/opt/mssql
+    ports:
+      - '1433:1433'
+    networks:
+      - proxy
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+
+networks:
+  proxy:
+    external: true
+    name: proxy
