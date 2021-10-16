@@ -1,0 +1,20 @@
+version: "2.1"
+services:
+  traccar:
+    container_name: traccar
+    image: traccar/traccar:latest
+    volumes:
+      - ./data:/opt/traccar/data
+      - ./logs:/opt/traccar/logs
+      - ./traccar.xml:/opt/traccar/conf/traccar.xml
+    restart: unless-stopped
+    ports:
+      - 5000-5150:5000-5150/tcp
+      - 5000-5150:5000-5150/udp
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+    name: proxy
