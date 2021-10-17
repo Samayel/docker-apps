@@ -10,22 +10,22 @@ services:
       - proxy
       - internal
     environment:
+      - TZ=Etc/UTC
+#     - PGID=1000
+#     - PUID=1000
       - DB_HOST=db
       - DB_PORT=3306
       - DB_NAME=hedgedoc
       - DB_USER=hedgedoc
       - DB_PASS=hedgedoc
-      - PGID=1000
-      - PUID=1000
-      - TZ=Europe/Berlin
-      - CMD_DOMAIN=hedgedoc.quyo.net
+      - CMD_DOMAIN=doc.app.quyo.net
       - CMD_HOST=hedgedoc
       - CMD_PROTOCOL_USESSL=true
       - CMD_ALLOW_ANONYMOUS=false
       - CMD_ALLOW_ANONYMOUS_EDITS=true
       - CMD_ALLOW_FREEURL=true
       - CMD_REQUIRE_FREEURL_AUTHENTICATION=true
-      - CMD_ALLOW_EMAIL_REGISTER=true
+      - CMD_ALLOW_EMAIL_REGISTER=false
       - CMD_DEFAULT_PERMISSION=private
     depends_on:
       - db
@@ -39,13 +39,13 @@ services:
     networks:
       - internal
     environment:
+      - TZ=Etc/UTC
+#     - PGID=1000
+#     - PUID=1000
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=hedgedoc
       - MYSQL_USER=hedgedoc
       - MYSQL_PASSWORD=hedgedoc
-      - PGID=1000
-      - PUID=1000
-      - TZ=Europe/Berlin
 
 networks:
   proxy:
