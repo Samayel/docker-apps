@@ -1,0 +1,13 @@
+version: "2.1"
+services:
+  passwordpusher:
+    container_name: passwordpusher
+    image: docker.io/pglombardo/pwpush-ephemeral:latest
+    restart: unless-stopped
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+    name: proxy
