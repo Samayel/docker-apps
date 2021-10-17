@@ -1,0 +1,39 @@
+version: "2.1"
+services:
+  projectsend:
+    container_name: projectsend
+    image: lscr.io/linuxserver/projectsend
+    volumes:
+      - ./config:/config
+      - ./data:/data
+    restart: unless-stopped
+    networks:
+      - proxy
+      - internal
+    environment:
+      - TZ=Etc/UTC
+#     - PUID=1000
+#     - PGID=1000
+
+  db:
+    container_name: projectsend_db
+    image: linuxserver/mariadb:latest
+    volumes:
+      - ./db:/config
+    restart: unless-stopped
+    networks:
+      - internal
+    environment:
+      - TZ=Etc/UTC
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=projectsend
+      - MYSQL_USER=projectsend
+      - MYSQL_PASSWORD=projectsend
+
+networks:
+  proxy:
+    external: true
+    name: proxy
+  internal:
+    internal: true
+    driver: bridge
