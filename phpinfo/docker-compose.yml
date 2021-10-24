@@ -1,0 +1,31 @@
+version: '3'
+services:
+
+  phpinfo:
+    container_name: phpinfo
+    image: nginx:latest
+    restart: unless-stopped
+    volumes:
+      - ./config/nginx/fastcgi-php.conf:/etc/nginx/snippets/fastcgi-php.conf
+      - ./config/nginx/www.conf:/etc/nginx/conf.d/default.conf
+      - ./data/www:/www
+    networks:
+      - external
+      - internal
+
+  phpinfo-php:
+    container_name: phpinfo-php
+    image: php:7-fpm
+    restart: unless-stopped
+    volumes:
+      - ./config/php/custom.conf:/usr/local/etc/php-fpm.d/zzz-custom.conf
+      - ./data/www:/www
+    networks:
+      - internal
+
+networks:
+  external:
+    name: phpinfo_external
+  internal:
+    name: phpinfo_internal
+    internal: true  # needs to be false if php requires internet access
