@@ -1,19 +1,17 @@
 version: "2.1"
 services:
+
   pwndrop:
     container_name: pwndrop
     image: lscr.io/linuxserver/pwndrop
     volumes:
       - ./config:/config
     restart: unless-stopped
-    networks:
-      - proxy
     environment:
       - TZ=Etc/UTC
-#     - PUID=1000
-#     - PGID=1000
+    networks:
+      - external
 
 networks:
-  proxy:
-    external: true
-    name: proxy
+  external:
+    name: pwndrop_external
