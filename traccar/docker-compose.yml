@@ -1,38 +1,40 @@
 version: "2.1"
 services:
+
   traccar:
     container_name: traccar
     image: traccar/traccar:latest
     volumes:
-      - ./logs:/opt/traccar/logs
-      - ./traccar.xml:/opt/traccar/conf/traccar.xml
+      - ./config/traccar.xml:/opt/traccar/conf/traccar.xml
+      - ./data/logs:/opt/traccar/logs
     restart: unless-stopped
+    depends_on:
+      - traccar-db
     ports:
       - 5000-5150:5000-5150/tcp
       - 5000-5150:5000-5150/udp
     networks:
-      - proxy
+      - external
       - internal
 
-  db:
-    container_name: traccar_db
+  traccar-db:
+    container_name: traccar-db
     image: linuxserver/mariadb:latest
     volumes:
-      - ./db:/config
+      - ./data/db:/config
     restart: unless-stopped
-    networks:
-      - internal
     environment:
-      - MYSQL_ROOT_PASSWORD=root
+      - TZ=Etc/UTC
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=traccar
       - MYSQL_USER=traccar
-      - MYSQL_PASSWORD=traccar
-      - TZ=Etc/UTC
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    networks:
+      - internal
 
 networks:
-  proxy:
-    external: true
-    name: proxy
+  external:
+    name: traccar_external
   internal:
+    name: traccar_internal
     internal: true
-    driver: bridge
