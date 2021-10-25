@@ -1,27 +1,15 @@
 version: '2'
 services:
 
-  wekandb:
-    container_name: wekan_db
-    image: mongo:4.4
-    restart: unless-stopped
-    command: mongod --logpath /dev/null --oplogSize 128 --quiet
-    networks:
-      - internal
-    volumes:
-      - ./db:/data/db
-      - ./dump:/dump
-
   wekan:
     container_name: wekan
     image: quay.io/wekan/wekan
     restart: unless-stopped
-    networks:
-      - internal
-      - proxy
+    depends_on:
+      - wekan-db
     environment:
-      - MONGO_URL=mongodb://wekan_db:27017/wekan
-      - ROOT_URL=https://wekan.localhost
+      - MONGO_URL=mongodb://wekan-db:27017/wekan
+      - ROOT_URL=${ROOT_URL}
       #---------------------------------------------------------------
       # ==== EMAIL SETTINGS ====
       # Email settings are required in both MAIL_URL and Admin Panel,
@@ -30,7 +18,8 @@ services:
       # NOTE: Special characters need to be url-encoded in MAIL_URL.
       #       You can encode those characters for example at: https://www.urlencoder.org
       #- MAIL_URL=smtp://user:pass@mailserver.example.com:25/
-      - MAIL_FROM=Wekan Notifications <noreply@wekan.localhost>
+      - MAIL_URL=${MAIL_URL}
+      - MAIL_FROM=${MAIL_FROM}
       #---------------------------------------------------------------
       # ==== NUMBER OF SEARCH RESULTS PER PAGE BY DEFAULT ====
       #- RESULTS_PER_PAGE=20
@@ -52,13 +41,24 @@ services:
       #---------------------------------------------------------------
       - BIGEVENTS_PATTERN=NONE
       - BROWSER_POLICY_ENABLED=true
-    depends_on:
-      - wekandb
+    networks:
+      - external
+      - internal
+
+  wekan-db:
+    container_name: wekan-db
+    image: mongo:4.4
+    restart: unless-stopped
+    command: mongod --logpath /dev/null --oplogSize 128 --quiet
+    volumes:
+      - ./data/db:/data/db
+      - ./data/db-dump:/dump
+    networks:
+      - internal
 
 networks:
+  external:
+    name: wekan_external
   internal:
+    name: wekan_internal
     internal: true
-    driver: bridge
-  proxy:
-    external: true
-    name: proxy
