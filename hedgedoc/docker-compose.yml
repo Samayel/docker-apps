@@ -1,24 +1,22 @@
 version: "2.1"
 services:
-  app:
+
+  hedgedoc:
     container_name: hedgedoc
     image: linuxserver/hedgedoc:latest
     volumes:
-      - ./config/app:/config
+      - ./data/app:/config
     restart: unless-stopped
-    networks:
-      - proxy
-      - internal
+    depends_on:
+      - hedgedoc-db
     environment:
       - TZ=Etc/UTC
-#     - PGID=1000
-#     - PUID=1000
-      - DB_HOST=db
+      - DB_HOST=hedgedoc-db
       - DB_PORT=3306
       - DB_NAME=hedgedoc
       - DB_USER=hedgedoc
-      - DB_PASS=hedgedoc
-      - CMD_DOMAIN=doc.app.quyo.net
+      - DB_PASS=${MYSQL_PASSWORD}
+      - CMD_DOMAIN=${CMD_DOMAIN}
       - CMD_HOST=hedgedoc
       - CMD_PROTOCOL_USESSL=true
       - CMD_ALLOW_ANONYMOUS=false
@@ -27,30 +25,28 @@ services:
       - CMD_REQUIRE_FREEURL_AUTHENTICATION=true
       - CMD_ALLOW_EMAIL_REGISTER=false
       - CMD_DEFAULT_PERMISSION=private
-    depends_on:
-      - db
+    networks:
+      - external
+      - internal
 
-  db:
-    container_name: hedgedoc_db
+  hedgedoc-db:
+    container_name: hedgedoc-db
     image: linuxserver/mariadb:latest
     volumes:
-      - ./config/db:/config
+      - ./data/db:/config
     restart: unless-stopped
-    networks:
-      - internal
     environment:
       - TZ=Etc/UTC
-#     - PGID=1000
-#     - PUID=1000
-      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=hedgedoc
       - MYSQL_USER=hedgedoc
-      - MYSQL_PASSWORD=hedgedoc
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    networks:
+      - internal
 
 networks:
-  proxy:
-    external: true
-    name: proxy
+  external:
+    name: hedgedoc_external
   internal:
+    name: hedgedoc_internal
     internal: true
-    driver: bridge
