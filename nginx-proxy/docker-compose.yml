@@ -1,27 +1,60 @@
 version: '3'
 services:
+
   nginx-proxy:
     container_name: nginx-proxy
-    image: 'jc21/nginx-proxy-manager:latest'
-    ports:
-      # Public HTTP Port:
-      - '80:80'
-      # Public HTTPS Port:
-      - '443:443'
-      # Admin Web Port:
-      #- '81:81'
-    environment:
-      DB_SQLITE_FILE: "/data/database.sqlite"
-      # Uncomment this if IPv6 is not enabled on your host
-      # DISABLE_IPV6: 'true'
+    image: jc21/nginx-proxy-manager:latest
     volumes:
       - ./data:/data
       - ./letsencrypt:/etc/letsencrypt
+    ports:
+      # Public HTTP Port:
+      - 80:80
+      # Public HTTPS Port:
+      - 443:443
+      # Admin Web Port:
+      #- 81:81
+    environment:
+      DB_SQLITE_FILE: /data/database.sqlite
+      # Uncomment this if IPv6 is not enabled on your host
+      # DISABLE_IPV6: true
     restart: unless-stopped
     networks:
-      - proxy
+      - external
+      - hedgedoc
+      - phpinfo
+      - portainer
+      - privatebin
+      - projectsend
+      - pwndrop
+      - rainloop
+      - resilio-sync
+      - snapdrop
+      - traccar
+      - wekan
 
 networks:
-  proxy:
-    external: true
-    name: proxy
+  external:
+    name: nginx-proxy_external
+  hedgedoc:
+    name: hedgedoc_external
+  phpinfo:
+    name: phpinfo_external
+  portainer:
+    name: portainer_external
+  privatebin:
+    name: privatebin_external
+  projectsend:
+    name: projectsend_external
+  pwndrop:
+    name: pwndrop_external
+  rainloop:
+    name: rainloop_external
+  resilio-sync:
+    name: resilio-sync_external
+  snapdrop:
+    name: snapdrop_external
+  traccar:
+    name: traccar_external
+  wekan:
+    name: wekan_external
